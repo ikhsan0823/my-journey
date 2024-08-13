@@ -7,14 +7,23 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-      },
+    colors: {
+        'transparent': 'transparent',
+        'bright-blue': '#00abe4',
+        'tomb-blue': '#009cd0',
+        'light-blue': '#e9f1fa',
+        'rainy-day': '#d9e7f6',
+        'dark-gray': '#343a40',
+        'dark-grayish-blue': '#2b3035',
+        'soft-white': '#f5f5f5',
+        'light-gray': '#ebebeb',
+        'tomato': '#ff6347',
+        'light-red': '#ff5233',
     },
   },
-  plugins: [],
+  plugins: [
+    require('tailwind-scrollbar-hide'),
+    require('@tailwindcss/forms')
+  ],
 };
 export default config;
