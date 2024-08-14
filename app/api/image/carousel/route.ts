@@ -11,8 +11,9 @@ export const GET = async (request: NextRequest) => {
     }
 
     try {
-        const images = await Image.find({ userId: userId });
 
+        const images = await Image.find({ userId: userId }).sort({ createdAt: -1 }).limit(5);
+        
         if (!images) {
             return NextResponse.json({ message: "Images not found" }, { status: 404 });
         }

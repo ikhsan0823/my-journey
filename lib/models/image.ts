@@ -13,11 +13,11 @@ const imageSchema = new Schema({
         type: Date,
         required: true
     },
-    file: {
+    publicId: {
         type: String,
         required: true
     },
-    fileType: {
+    secureUrl: {
         type: String,
         required: true
     }

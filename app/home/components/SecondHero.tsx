@@ -1,18 +1,29 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Carousel from '@/components/Carousel'
 import { Camera, Notebook, Pencil } from 'lucide-react'
 import { motion } from 'framer-motion'
+import axios from 'axios';
 
-const slides = [
-    "https://wallpaperaccess.com/full/25682.jpg",
-    "https://getwallpapers.com/wallpaper/full/5/f/c/101108.jpg",
-    "https://c4.wallpaperflare.com/wallpaper/73/484/20/3-316-16-9-aspect-ratio-s-sfw-wallpaper-preview.jpg",
-    "https://c4.wallpaperflare.com/wallpaper/351/665/181/3-316-16-9-aspect-ratio-s-sfw-wallpaper-preview.jpg",
-    "https://th.bing.com/th/id/OIP.0QSiosoe-ckhHxeDxjKckAAAAA?rs=1&pid=ImgDetMain"
-]
+type Image = {
+  secureUrl: string;
+}
 
 export const SecondHero = () => {
+  const [images, setImages] = useState<string[]>([]);
+
+  const fetchSlides = async () => {
+    try {
+      const response = await axios.get('/api/image/carousel');
+      setImages(response.data.images.map((image: Image) => image.secureUrl));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchSlides();
+  }, []);
   return (
     <div className='p-5 pt-10 sm:p-10 sm:pt-5'>
       <div>
@@ -21,7 +32,7 @@ export const SecondHero = () => {
           <div>Sweet Memory</div>
         </motion.div>
         <Carousel autoSlide={true}>
-          {slides.map((s, i) => (
+          {images.map((s, i) => (
             <div key={i} className='w-full h-64 flex items-center justify-center bg-dark-gray rounded-lg'><img src={s} className='object-contain w-full h-full' /></div>
           ))}
         </Carousel>

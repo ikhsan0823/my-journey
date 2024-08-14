@@ -10,28 +10,18 @@ export const POST = async (request: NextRequest) => {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const formData = await request.formData();
-    const description = formData.get("description");
-    const file = formData.get("file");
-    const date = formData.get("date");
+    const { description, publicId, date, secureUrl } = await request.json();
 
-    if (!description || !file || !date) {
+    if (!description || !publicId || !date || !secureUrl) {
         return NextResponse.json({ message: "All fields are required" }, { status: 400 });
     }
-
-    if (!(file instanceof File)) {
-        return NextResponse.json({ message: "Invalid file upload" }, { status: 400 });
-    }
-
-    const fileBuffer = await file.arrayBuffer();
-    const base64Image = Buffer.from(fileBuffer).toString("base64");
 
     const newImage = new Image({
         userId: userId,
         description: description.toString(),
         date: new Date(date.toString()),
-        file: base64Image,
-        fileType: file.type,
+        publicId: publicId.toString(),
+        secureUrl: secureUrl.toString(),
     });
 
     try {
