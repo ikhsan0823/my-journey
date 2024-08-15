@@ -11,11 +11,14 @@ type Image = {
 
 export const SecondHero = () => {
   const [images, setImages] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchSlides = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get('/api/image/carousel');
       setImages(response.data.images.map((image: Image) => image.secureUrl));
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -31,11 +34,22 @@ export const SecondHero = () => {
           <Camera size={24} />
           <div>Sweet Memory</div>
         </motion.div>
-        <Carousel autoSlide={true}>
-          {images.map((s, i) => (
-            <div key={i} className='w-full h-64 flex items-center justify-center bg-dark-gray rounded-lg'><img src={s} className='object-contain w-full h-full' /></div>
-          ))}
-        </Carousel>
+        {isLoading ? (
+            <div className='h-64 flex justify-center items-center'>
+              <div className='flex gap-2'>
+                  <div className='w-2 h-2 rounded-full bg-bright-blue animate-bounce [animation-delay:.7s]'></div>
+                  <div className='w-2 h-2 rounded-full bg-bright-blue animate-bounce [animation-delay:.2s]'></div>
+                  <div className='w-2 h-2 rounded-full bg-bright-blue animate-bounce [animation-delay:.7s]'></div>
+                </div>
+            </div>
+          ) : (
+            <Carousel autoSlide={true}>
+              {images.map((s, i) => (
+                <div key={i} className='w-full h-64 flex items-center justify-center bg-dark-gray rounded-lg'><img src={s} className='object-contain w-full h-full' /></div>
+              ))}
+          </Carousel>
+          )
+        }
       </div>
       <div className='pt-7'>
         <motion.div initial={{ x: -20, opacity: 0 }} whileInView={{ x: 0, opacity: 1 }} transition={{ delay: 0.5, duration: 0.5 }} className='text-lg font-semibold mb-3 text-dark-gray flex items-center gap-2'>

@@ -128,48 +128,50 @@ export const Carousels = ({ onSubmit }: { onSubmit: (formData: FormData, usernam
   return (
     <div className='px-5 sm:px-10 pt-5 pb-5 flex flex-col w-full h-full'>
       {showUploadImage && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className='bg-soft-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 shadow-md rounded-lg w-72'>
-          <form onSubmit={handleSubmit(handleFormSubmit)} className='p-5 relative'>
-            <X className='absolute top-2 right-2 cursor-pointer text-dark-gray/50 hover:text-dark-gray' size={15} onClick={() => closeUploadImage()} />
-            <label htmlFor="file" className='h-[180px] w-full flex flex-col justify-center gap-5 cursor-pointer items-center border border-dashed rounded-lg p-6 mt-5'>
-              {selectedImage ? (
-                <img src={selectedImage} alt="Uploaded" className="h-full w-full object-cover rounded-lg" />
-              ) : (
-                <div className='flex items-center justify-center text-dark-gray/50'>
-                  <ImageUp size={50} strokeWidth={1} />
+        <div className='absolute top-0 left-0 w-full h-full z-50 bg-dark-gray/50'>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className='bg-soft-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 shadow-md rounded-lg w-72'>
+            <form onSubmit={handleSubmit(handleFormSubmit)} className='p-5 relative'>
+              <X className='absolute top-2 right-2 cursor-pointer text-dark-gray/50 hover:text-dark-gray' size={15} onClick={() => closeUploadImage()} />
+              <label htmlFor="file" className='h-[180px] w-full flex flex-col justify-center gap-5 cursor-pointer items-center border border-dashed rounded-lg p-6 mt-5 bg-light-gray'>
+                {selectedImage ? (
+                  <img src={selectedImage} alt="Uploaded" className="h-full w-full object-cover rounded-lg" />
+                ) : (
+                  <div className='flex items-center justify-center text-dark-gray/50'>
+                    <ImageUp size={50} strokeWidth={1} />
+                  </div>
+                )}
+                <div className='flex items-center justify-center'>
+                  <span className={`text-sm text-dark-gray ${selectedImage ? 'hidden' : 'block'}`}>Choose an image</span>
+                  <input type="file" id='file' {...register('file', { onChange: (e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onloadend = () => {
+                        if (typeof reader.result === 'string') {
+                          setSelectedImage(reader.result);
+                        }
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  }})} className='hidden' />
                 </div>
-              )}
-              <div className='flex items-center justify-center'>
-                <span className={`text-sm text-dark-gray ${selectedImage ? 'hidden' : 'block'}`}>Choose an image</span>
-                <input type="file" id='file' {...register('file', { onChange: (e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    const reader = new FileReader();
-                    reader.onloadend = () => {
-                      if (typeof reader.result === 'string') {
-                        setSelectedImage(reader.result);
-                      }
-                    };
-                    reader.readAsDataURL(file);
-                  }
-                }})} className='hidden' />
+              </label>
+              <div className='mt-5 flex flex-col'>
+                <label htmlFor="description" className='text-sm font-semibold mb-1'>Describe this moment</label>
+                <textarea id="description" cols={30} rows={3} {...register('description')} className='border rounded-lg p-3 bg-transparent'></textarea>
               </div>
-            </label>
-            <div className='mt-5 flex flex-col'>
-              <label htmlFor="description" className='text-sm font-semibold mb-1'>Describe this moment</label>
-              <textarea id="description" cols={30} rows={3} {...register('description')} className='border rounded-lg p-3 bg-transparent'></textarea>
-            </div>
-            <div className='flex flex-col mt-4'>
-              <label htmlFor="date" className='text-sm font-semibold mb-1'>When do you get this moment</label>
-              <input type="date" id="date" {...register('date')} className='border rounded-lg p-3 text-sm bg-transparent' />
-            </div>
-            <div className='flex justify-end mt-5'>
-              <button className='bg-bright-blue text-soft-white py-2 w-20 rounded-lg text-sm font-semibold hover:bg-tomb-blue flex justify-center items-center'>
-                <div>{buttonTitle}</div>
-              </button>
-            </div>
-          </form>
-        </motion.div>
+              <div className='flex flex-col mt-4'>
+                <label htmlFor="date" className='text-sm font-semibold mb-1'>When do you get this moment</label>
+                <input type="date" id="date" {...register('date')} className='border rounded-lg p-3 text-sm bg-transparent' />
+              </div>
+              <div className='flex justify-end mt-5'>
+                <button className='bg-bright-blue text-soft-white py-2 w-20 rounded-lg text-sm font-semibold hover:bg-tomb-blue flex justify-center items-center'>
+                  <div>{buttonTitle}</div>
+                </button>
+              </div>
+            </form>
+          </motion.div>
+        </div>
       )}
       <div className='text-base font-semibold mb-5 flex justify-end sm:justify-start items-center'>
         <motion.div initial={{ x: -20, opacity: 0 }} whileInView={{ x: 0, opacity: 1 }} transition={{ duration: 0.5 }} className='flex items-center gap-2 flex-row-reverse sm:flex-row'>
@@ -179,22 +181,22 @@ export const Carousels = ({ onSubmit }: { onSubmit: (formData: FormData, usernam
       </div>
       <div className='max-w-[683px] min-w-64 mx-auto'>
         {isLoading ? (
-          <div className='w-full h-96 flex items-center justify-center rounded-lg'>
-            <div className='flex gap-2'>
-              <div className='w-3 h-3 rounded-full bg-bright-blue animate-bounce [animation-delay:.7s]'></div>
-              <div className='w-3 h-3 rounded-full bg-bright-blue animate-bounce [animation-delay:.3s]'></div>
-              <div className='w-3 h-3 rounded-full bg-bright-blue animate-bounce [animation-delay:.7s]'></div>
+            <div className='w-full h-96 flex items-center justify-center rounded-lg'>
+              <div className='flex gap-2'>
+                <div className='w-2 h-2 rounded-full bg-bright-blue animate-bounce [animation-delay:.7s]'></div>
+                <div className='w-2 h-2 rounded-full bg-bright-blue animate-bounce [animation-delay:.3s]'></div>
+                <div className='w-2 h-2 rounded-full bg-bright-blue animate-bounce [animation-delay:.7s]'></div>
+              </div>
             </div>
-          </div>
-        ) : (
-        <Carousel autoSlide={true}>
-          {images.map((src, i) => (
-            <div key={i} className='w-full h-96 flex items-center justify-center bg-dark-gray rounded-lg'>
-              <img src={src} className='object-contain w-full h-full' />
-            </div>
-          ))}
-        </Carousel>
-        )
+          ) : (
+            <Carousel autoSlide={true}>
+              {images.map((src, i) => (
+                <div key={i} className='w-full h-96 flex items-center justify-center bg-dark-gray rounded-lg'>
+                  <img src={src} className='object-contain w-full h-full' />
+                </div>
+              ))}
+            </Carousel>
+          )
         }
       </div>
       <div className='flex-1 w-full flex justify-center items-center'>

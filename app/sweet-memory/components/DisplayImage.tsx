@@ -78,7 +78,7 @@ export const DisplayImage = () => {
   return (
     <div className='px-5 sm:px-10 pt-14 sm:pt-5 pb-5 flex flex-col w-full h-full overflow-hidden'>
         {showImage && selectedImage && (
-            <div className='fixed top-0 left-0 w-full h-full bg-dark-gray/50 z-50 flex items-center justify-center'>
+            <div className='absolute top-0 left-0 w-full h-full bg-dark-gray/50 z-50 flex items-center justify-center'>
                 <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} className='bg-soft-white h-[calc(100%-20px)] w-[calc(100%-20px)] lg:h-[calc(100%-3rem)] lg:w-[calc(100%-3rem)] rounded-lg relative'>
                     <X className='absolute top-1 right-1 cursor-pointer text-dark-gray/50 hover:text-dark-gray' size={15} onClick={() => setShowImage(false)} />
                     <Trash onClick={() => handleDeleteImage(selectedImage)} className='absolute bottom-1 right-1 h-8 w-8 p-2 hover:bg-light-gray rounded-full cursor-pointer text-tomato' />
@@ -89,12 +89,11 @@ export const DisplayImage = () => {
         {isLoading ?
             <div className='flex justify-center items-center'>
                 <div className='flex gap-2'>
-                    <div className='w-3 h-3 rounded-full bg-bright-blue animate-bounce [animation-delay:.7s]'></div>
-                    <div className='w-3 h-3 rounded-full bg-bright-blue animate-bounce [animation-delay:.3s]'></div>
-                    <div className='w-3 h-3 rounded-full bg-bright-blue animate-bounce [animation-delay:.7s]'></div>
+                    <div className='w-2 h-2 rounded-full bg-bright-blue animate-bounce [animation-delay:.7s]'></div>
+                    <div className='w-2 h-2 rounded-full bg-bright-blue animate-bounce [animation-delay:.3s]'></div>
+                    <div className='w-2 h-2 rounded-full bg-bright-blue animate-bounce [animation-delay:.7s]'></div>
                 </div>
-            </div> 
-            
+            </div>  
             : (
                 <div className='flex flex-wrap gap-4 overflow-y-auto justify-center sm:justify-start scrollbar-hide'>
                     {image.map((image) => (

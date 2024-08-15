@@ -1,5 +1,5 @@
 'use client';
-import React from 'react'
+import React, { useEffect} from 'react'
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import axios from 'axios';
@@ -12,6 +12,9 @@ import { useSidebar } from '@/context/SidebarContext';
 
 export const Sidebar: React.FC = () => {
   const [showLogout, setShowLogout] = React.useState(false);
+  const [todoNotCompleted, setTodoNotCompleted] = React.useState(false);
+  const [planNotCompleted, setPlanNotCompleted] = React.useState(false);
+  const [goalNotCompleted, setGoalNotCompleted] = React.useState(false);
   const {extended, setExtended} = useSidebar();
   const pathname = usePathname();
 
@@ -21,6 +24,29 @@ export const Sidebar: React.FC = () => {
   const showLogoutModal = () => {
     setShowLogout(true);
   }
+
+  const notCompleted = async () => {
+    try {
+      const response = await axios.get('/api/alert');
+      if (response.status === 200) {
+        if (response.data.todos > 0) {
+          setTodoNotCompleted(true);
+        }
+        if (response.data.plans > 0) {
+          setPlanNotCompleted(true);
+        }
+        if (response.data.goals > 0) {
+          setGoalNotCompleted(true);
+        }
+      }
+    } catch (error) {
+      return console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    notCompleted();
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -61,9 +87,9 @@ export const Sidebar: React.FC = () => {
             ) : (
               <>
                 <SidebarItem icon={<Home size={20} />} text='Home' path='/home' />
-                <SidebarItem icon={<ListTodo size={20} />} text='ToDo List' path='/todo-list' hasAlert />
-                <SidebarItem icon={<CalendarHeart size={20} />} text='Monthly Plan' path='/monthly-plan' />
-                <SidebarItem icon={<Goal size={20} />} text='Goals' path='/goals' />
+                <SidebarItem icon={<ListTodo size={20} />} text='ToDo List' path='/todo-list' hasAlert={todoNotCompleted} />
+                <SidebarItem icon={<CalendarHeart size={20} />} text='Monthly Plan' path='/monthly-plan' hasAlert={planNotCompleted} />
+                <SidebarItem icon={<Goal size={20} />} text='Goals' path='/goals' hasAlert={goalNotCompleted} />
               </>
             )}
           </ul>
@@ -86,9 +112,9 @@ export const Sidebar: React.FC = () => {
             ) : (
               <>
                 <SidebarItemExtended icon={<Home size={20} />} text='Home' path='/home' />
-                <SidebarItemExtended icon={<ListTodo size={20} />} text='ToDo List' path='/todo-list' hasAlert />
-                <SidebarItemExtended icon={<CalendarHeart size={20} />} text='Monthly Plan' path='/monthly-plan' />
-                <SidebarItemExtended icon={<Goal size={20} />} text='Goals' path='/goals' />
+                <SidebarItemExtended icon={<ListTodo size={20} />} text='ToDo List' path='/todo-list' hasAlert={todoNotCompleted} />
+                <SidebarItemExtended icon={<CalendarHeart size={20} />} text='Monthly Plan' path='/monthly-plan' hasAlert={planNotCompleted} />
+                <SidebarItemExtended icon={<Goal size={20} />} text='Goals' path='/goals' hasAlert={goalNotCompleted} />
                 <div className='w-full h-1 border-b border-dark-gray/50 pt-2 mb-3'></div>
                 <SidebarItemExtended icon={<Camera size={20} />} text='Sweet Memory' path='/sweet-memory' />
                 <SidebarItemExtended icon={<Notebook size={20} />} text='Notes' path='/notes' />

@@ -211,25 +211,27 @@ export const Hero = () => {
         <div className="px-5 sm:px-10 pt-5 pb-5 flex flex-col w-full h-full">
           <AnimatePresence>
             {showAddPlan && (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }} className='absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 h-fit w-64 bg-soft-white shadow-md rounded-lg z-[100]'>
-                <div className='w-full h-full relative p-5'>
-                  <X className='absolute top-2 right-2 cursor-pointer text-dark-gray/50 hover:text-dark-gray' size={15} onClick={() => setShowAddPlan(false)} />
-                  <div className='text-lg font-semibold mb-3'>Add Plan</div>
-                  <form onSubmit={handleSubmit(onSubmit)}>
-                    <input type="text" {...register('title')} placeholder='Title' className={`border-2 border-bright-blue/50 w-full p-2 rounded-lg focus:outline-none focus:border-bright-blue bg-transparent ${errors.title ? '' : 'mb-3'}`} />
-                    {errors.title && <p className='text-xs text-tomato mb-3'>{errors.title.message}</p>}
-                    <textarea {...register('description')} placeholder='Description' className={`border-2 border-bright-blue/50 w-full p-2 rounded-lg focus:outline-none focus:border-bright-blue bg-transparent ${errors.description ? '' : 'mb-3'}`} />
-                    {errors.description && <p className='text-xs text-tomato mb-3'>{errors.description.message}</p>}
-                    <input type="time" {...register('time')} placeholder='Time' className={`border-2 border-bright-blue/50 w-full p-2 rounded-lg focus:outline-none focus:border-bright-blue bg-transparent ${errors.time ? '' : 'mb-3'}`} />
-                    {errors.time && <p className='text-xs text-tomato mb-3'>{errors.time.message}</p>}
-                    <input type="date" {...register('date')} placeholder='Date' className={`border-2 border-bright-blue/50 w-full p-2 rounded-lg focus:outline-none focus:border-bright-blue bg-transparent ${errors.date ? '' : 'mb-3'}`} defaultValue={defaultDate} />
-                    {errors.date && <p className='text-xs text-tomato mb-3'>{errors.date.message}</p>}
-                    <button type="submit" className='bg-bright-blue px-3 py-2 rounded-lg w-20 text-sm font-semibold text-soft-white hover:bg-tomb-blue flex justify-center items-center'>
-                      <span>{buttonTitle}</span>
-                    </button>
-                  </form>
-                </div>
-              </motion.div>
+              <div className='w-full h-full absolute bg-dark-gray/50 top-0 left-0 z-50'>
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }} className='absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 h-fit w-64 bg-soft-white shadow-md rounded-lg z-[100]'>
+                  <div className='w-full h-full relative p-5'>
+                    <X className='absolute top-2 right-2 cursor-pointer text-dark-gray/50 hover:text-dark-gray' size={15} onClick={() => setShowAddPlan(false)} />
+                    <div className='text-lg font-semibold mb-3'>Add Plan</div>
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                      <input type="text" {...register('title')} placeholder='Title' className={`border-2 border-bright-blue/50 w-full p-2 rounded-lg focus:outline-none focus:border-bright-blue bg-transparent ${errors.title ? '' : 'mb-3'}`} />
+                      {errors.title && <p className='text-xs text-tomato mb-3'>{errors.title.message}</p>}
+                      <textarea {...register('description')} placeholder='Description' className={`border-2 border-bright-blue/50 w-full p-2 rounded-lg focus:outline-none focus:border-bright-blue bg-transparent ${errors.description ? '' : 'mb-3'}`} />
+                      {errors.description && <p className='text-xs text-tomato mb-3'>{errors.description.message}</p>}
+                      <input type="time" {...register('time')} placeholder='Time' className={`border-2 border-bright-blue/50 w-full p-2 rounded-lg focus:outline-none focus:border-bright-blue bg-transparent ${errors.time ? '' : 'mb-3'}`} />
+                      {errors.time && <p className='text-xs text-tomato mb-3'>{errors.time.message}</p>}
+                      <input type="date" {...register('date')} placeholder='Date' className={`border-2 border-bright-blue/50 w-full p-2 rounded-lg focus:outline-none focus:border-bright-blue bg-transparent ${errors.date ? '' : 'mb-3'}`} defaultValue={defaultDate} />
+                      {errors.date && <p className='text-xs text-tomato mb-3'>{errors.date.message}</p>}
+                      <button type="submit" className='bg-bright-blue px-3 py-2 rounded-lg w-20 text-sm font-semibold text-soft-white hover:bg-tomb-blue flex justify-center items-center'>
+                        <span>{buttonTitle}</span>
+                      </button>
+                    </form>
+                  </div>
+                </motion.div>
+              </div>
             )}
           </AnimatePresence>
           <AnimatePresence>
