@@ -1,6 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import { Notebook } from 'lucide-react'
+import { motion } from 'framer-motion';
 import axios from 'axios'
 import { CardContainer } from './CardContainer'
 import { AddNoteForm } from './AddNoteForm'
@@ -69,10 +70,10 @@ const Notes = () => {
         <div className='px-5 sm:px-10 pt-5 pb-5 h-full w-full flex flex-col'>
             {showAddNote && <AddNoteForm closeForm={() => setShowAddNote(false)} />}
             <div className='text-base font-semibold mb-5 flex justify-end sm:justify-start items-center'>
-                <div className='flex items-center gap-2 flex-row-reverse sm:flex-row'>
+                <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }} className='flex items-center gap-2 flex-row-reverse sm:flex-row'>
                     <Notebook size={24} />
                     <div>Notes</div>
-                </div>
+                </motion.div>
             </div>
             <div className='flex flex-col-reverse sm:flex-row sm:justify-between gap-2 sm:gap-5 mb-5'>
                 <div className='flex gap-2'>

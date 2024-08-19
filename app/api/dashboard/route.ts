@@ -4,6 +4,7 @@ import connect from "@/lib/db";
 import Goal from "@/lib/models/goals";
 import Plan from "@/lib/models/plan";
 import Todo from "@/lib/models/todo";
+import Note from "@/lib/models/note";
 import getUserData from "@/lib/getUserData";
 
 export const GET = async (request: NextRequest) => {
@@ -46,10 +47,13 @@ export const GET = async (request: NextRequest) => {
         const goalCompletedPercentage = totalGoals > 0 ? (totalComplete / totalGoals) * 100 : 0;
         const planCompletedPercentage = totalPlans > 0 ? (checkedPlans / totalPlans) * 100 : 0;
 
+        const recentNote = await Note.findOne({ userId: userId }).sort({ createdAt: -1 });
+
         return NextResponse.json({
             taskCompletedPercentage,
             goalCompletedPercentage,
-            planCompletedPercentage
+            planCompletedPercentage,
+            recentNote
         }, { status: 200 });
     } catch (error) {
         return NextResponse.json({ message: "Something went wrong", error }, { status: 500 });

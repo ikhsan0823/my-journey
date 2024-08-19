@@ -117,8 +117,8 @@ function Hero() {
         const day = String(date.getDate()).padStart(2, '0');
         const dateStr = `${year}-${month}-${day}`;
 
-        try {
-            const response = await axios.post('/api/todo/create', { title: data.todoTitle, date: dateStr });
+        try {   
+            const response = await axios.post('/api/todo/create', { title: data.todoTitle, date: dateStr, time: currTime });
             success(response.data.message, 5);
             const newItem: TodoItem = {
                 _id: response.data.id,

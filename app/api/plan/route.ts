@@ -14,7 +14,7 @@ export const GET = async (request: NextRequest) => {
     try {
         const uniqueDates = await Plan.aggregate([
             { $match: { userId: userId } },
-            { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$date" } }, title: { $first: "$title" }, count: { $sum: 1  } } }
+            { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$date" } }, title: { $first: "$title" }, count: { $sum: 1  }, checked: { $first: "$checked" } } }
         ]);
 
         // Mengembalikan response

@@ -12,14 +12,12 @@ export const POST = async (request: NextRequest) => {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const currTime = new Date().toLocaleTimeString().slice(0, 5);
-
     try {
         const todo = await request.json();
         const newTodo = new Todo({
             userId: userId,
             title: todo.title,
-            time: currTime,
+            time: todo.time,
             date: todo.date
         });
         await newTodo.save();

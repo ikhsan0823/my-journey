@@ -1,5 +1,6 @@
 'use client'
 import { CircleCheck, CircleX, EllipsisVertical, LoaderCircle } from 'lucide-react'
+import { motion } from 'framer-motion'
 import React, { useState } from 'react'
 import axios from 'axios';
 import { AlertContext } from '@/context/AlertContext';
@@ -56,7 +57,7 @@ export const Card = ({title, content, date, id, onClick, category}: {title: stri
   
   const truncatedContent = truncateText(content, 100);
   return (
-    <div className='bg-bright-blue rounded-lg p-3 max-w-80 min-w-52 h-44 flex flex-col justify-between overflow-hidden'>
+    <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className='bg-bright-blue rounded-lg p-3 max-w-80 min-w-52 h-44 flex flex-col justify-between overflow-hidden'>
       {showEdit && <EditNoteForm closeForm={() => setShowEdit(false)} id={id} title={title} content={content} category={category} />}
       {showDelete && 
         <div className='w-full h-full top-0 left-0 absolute z-50 bg-dark-gray/50'>
@@ -87,6 +88,6 @@ export const Card = ({title, content, date, id, onClick, category}: {title: stri
             </div>
           </div>
         </div>
-    </div>
+    </motion.div>
   )
 }

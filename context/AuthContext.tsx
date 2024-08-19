@@ -6,7 +6,9 @@ import Loader from "@/components/Loader";
 
 interface AuthContextProps {
     username: string | null;
+    email: string | null;
     setUsername: (username: string | null) => void;
+    setEmail: (email: string | null) => void;
     fetchData: () => Promise<void>;
 }
 
@@ -22,6 +24,7 @@ export const useAuth = () => {
 
 const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [username, setUsername] = useState<string | null>(null);
+    const [email, setEmail] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
 
     const fetchData = async () => {
@@ -29,13 +32,16 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
             const response = await axios.get("api/users");
             if (response.status === 200) {
                 setUsername(response.data.user.username);
+                setEmail(response.data.user.email);
                 setLoading(false);
             } else {
                 setUsername(null);
+                setEmail(null);
                 setLoading(false);
             }
         } catch (error) {
             setUsername(null);
+            setEmail(null);
             setLoading(false);
         }
     }
@@ -45,7 +51,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ username, setUsername, fetchData }}>
+        <AuthContext.Provider value={{ username, setUsername, email, setEmail, fetchData }}>
             {loading ? (
                 <div className="w-full h-screen relative">
                     <Loader />

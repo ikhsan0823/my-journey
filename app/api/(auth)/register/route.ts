@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 
 import connect from "@/lib/db";
 import User from "@/lib/models/user";
+import Profile from "@/lib/models/profile";
 
 export const POST = async (request: NextRequest) => {
     try {
@@ -21,6 +22,14 @@ export const POST = async (request: NextRequest) => {
             password: await bcrypt.hash(password, 10),
         });
         await newUser.save();
+
+        if (newUser) {
+            const newProfile = new Profile({
+                userId: newUser._id,
+                username: newUser.username,
+            });
+            await newProfile.save();
+        }
 
         return NextResponse.json({ message: "User created successfully" }, { status: 201 });
     } catch (error) {

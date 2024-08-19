@@ -7,6 +7,7 @@ interface PlanType {
   _id: string;
   title: string;
   count: number;
+  checked: boolean;
 }
 
 interface CalendarProps {
@@ -65,6 +66,7 @@ const Calendar = forwardRef(({ onButtonClick }: CalendarProps, ref) => {
 
     const plan = plans.find((p) => p._id === dateStr);
     const title = plan ? plan.title : '';
+    const checked = plan ? plan.checked : false;
     let count
 
     if (plan) {
@@ -80,7 +82,7 @@ const Calendar = forwardRef(({ onButtonClick }: CalendarProps, ref) => {
       <td key={day} onClick={() => onButtonClick(dateStr)} className={`border border-dark-gray/30 h-20 text-left align-top text-sm p-2 hover:bg-rainy-day cursor-pointer`}>
         <motion.div initial={{ y: 20, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} className={`h-5 w-5 flex justify-center items-center rounded-full ${isToday ? 'bg-bright-blue group-hover:bg-tomb-blue text-soft-white' : ''}`}>{day}</motion.div>
         <div className='group relative'>
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ delay: 0.5 }} className='text-ellipsis overflow-hidden whitespace-nowrap pl-1 text-sm text-bright-blue'>{title}</motion.div>
+          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ delay: 0.5 }} className={`text-ellipsis overflow-hidden whitespace-nowrap pl-1 text-sm text-bright-blue ${checked ? 'line-through' : ''}`}>{title}</motion.div>
           {title !== '' && <div className='absolute bottom-full rounded-md px-2 py-2 invisible group-hover:visible opacity-20 group-hover:opacity-100 translate-y-3 group-hover:-translate-y-0 transition-all bg-dark-gray text-soft-white'>{title}</div>}
         </div>
         <div className='w-full flex justify-end items-center'>
