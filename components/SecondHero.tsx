@@ -10,6 +10,7 @@ import { motion } from 'framer-motion'
 import { AtSign, Lock, LoaderCircle, CircleCheck, CircleX } from 'lucide-react'
 
 import { AlertContext } from '@/context/AlertContext'
+import { PasswordForm } from './PasswordForm'
 
 type InputProps = {
   username: string
@@ -21,6 +22,7 @@ const loginSchema = z.object({
   password: z.string().min(1, { message: 'Password is required' }).min(8, { message: 'Invalid password' })
 })
 export const SecondHero = () => {
+  const [showForm, setShowForm] = React.useState<boolean>(false)
   const [buttonTitle, setButtonTitle] = React.useState<React.ReactNode>('Sign in')
 
   const alertContext = React.useContext(AlertContext);
@@ -76,6 +78,7 @@ export const SecondHero = () => {
   }
   return (
       <motion.div initial={{ x: 50, opacity: 0 }} whileInView={{ x: 0, opacity: 1 }} transition={{ duration: 0.5 }} className='h-fit w-64 bg-soft-white p-5 rounded-lg shadow-md'>
+          {showForm && <PasswordForm closeForm={() => setShowForm(false)} />}
           <form onSubmit={handleSubmit(onSubmit)}>
               <h1 className='text-3xl font-bold text-bright-blue mb-8'>Sign in</h1>
               <div className='flex flex-col text-dark-gray relative'>
@@ -88,7 +91,7 @@ export const SecondHero = () => {
                   <input type="password" {...register('password')} id="password" placeholder='Password' className='w-full pl-7 pr-2 py-2 rounded-lg bg-transparent border-2 border-bright-blue/20 focus:outline-none focus:border-bright-blue' />
               </div>
               <div className='text-tomato text-sm'>{errors?.password?.message}</div>
-              <div className='w-full flex justify-end items-center mt-1'><Link className='text-bright-blue text-sm' href="/forgot-password">Forgot password?</Link></div>
+              <div className='w-full flex justify-end items-center mt-1'><button type='button' onClick={() => setShowForm(true)} className='text-bright-blue text-sm'>Forgot password?</button></div>
               <motion.button whileTap={{ scale: 0.8 }} className='w-full mt-5 py-2 px-3 bg-bright-blue hover:bg-tomb-blue rounded-lg font-semibold text-sm text-soft-white flex justify-center items-center'>
                 <span>{buttonTitle}</span>
               </motion.button>
