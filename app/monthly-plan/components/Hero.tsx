@@ -1,6 +1,6 @@
 'use client'
-import { CalendarHeart, CircleX, ClipboardList, FolderX, LoaderCircle, Plus, X } from 'lucide-react'
-import React, { useRef, useState, useEffect, createRef } from 'react'
+import { CalendarHeart, CircleX, ClipboardList, LoaderCircle, Plus, X } from 'lucide-react'
+import React, { useRef, useState, useEffect } from 'react'
 import axios from 'axios'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -51,7 +51,6 @@ export const Hero = () => {
   });
   const [showPlan, setShowPlan] = useState(false);
   const [buttonTitle, setButtonTitle] = useState<React.ReactNode>('Add');
-  const childRef = createRef<{ updateCalendar: () => void } | null>();
 
   const alertContext = React.useContext(AlertContext);
   if (!alertContext) return null;
@@ -125,9 +124,11 @@ export const Hero = () => {
         getPlans(dateStr);
         setShowAddPlan(false);
       }
-      if (childRef.current) {
-        childRef.current.updateCalendar();
-      }
+      const triggerFetchPlan = () => {
+        const event = new CustomEvent('fetchPlan');
+        window.dispatchEvent(event);
+      };
+      triggerFetchPlan();
       setButtonTitle('Add');
     } catch (error: unknown) {
       setButtonTitle(<CircleX className='font-semibold w-5 h-5' />);
@@ -161,6 +162,11 @@ export const Hero = () => {
       if (button) {
         button.classList.toggle('hidden');
       }
+      const triggerFetchPlan = () => {
+        const event = new CustomEvent('fetchPlan');
+        window.dispatchEvent(event);
+      };
+      triggerFetchPlan();
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         errorAlert(error.response?.data.message, 5);
@@ -179,9 +185,11 @@ export const Hero = () => {
         const dateStr = `${year}-${month}-${day}`;
         getPlans(dateStr);
       }
-      if (childRef.current) {
-        childRef.current.updateCalendar();
-      }
+      const triggerFetchPlan = () => {
+        const event = new CustomEvent('fetchPlan');
+        window.dispatchEvent(event);
+      };
+      triggerFetchPlan();
       setShowPlan(false);
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
@@ -203,7 +211,7 @@ export const Hero = () => {
             </motion.div>
           </div>
           <div className='flex-1 overflow-y-hidden'>
-            <Calendar onButtonClick={scrollToTarget} ref={childRef} />
+            <Calendar onButtonClick={scrollToTarget} />
           </div>
         </div>
       </div>
@@ -268,12 +276,10 @@ export const Hero = () => {
             </div>
             <div className='flex-1'>
               {plans.length === 0 && selectedDate === '' && <div className='text-sm text-dark-gray/50 w-full h-full flex flex-col justify-center items-center'>
-                <FolderX size={30} />
                 <div>Please <span onClick={scrollToUp} className='text-bright-blue hover:text-tomb-blue underline cursor-pointer'>select a date</span> to see plans</div>
               </div>}
               {plans.length === 0 && selectedDate !== '' && <div className='text-sm text-dark-gray/50 w-full h-full flex flex-col justify-center items-center'>
-                <FolderX size={30} />
-                <div>No plans found</div>
+                <div>No plans found. Please add a plan.</div>
               </div>}
               <div className='flex gap-3 flex-wrap'>
                 {plans.map((plan, index) => (

@@ -4,7 +4,7 @@ import axios from 'axios';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { CheckSquare, ListTodo, SendHorizonal, LoaderCircle, Square, X, CalendarX, RotateCw, ChevronUp, ChevronDown, FolderX } from 'lucide-react';
+import { CheckSquare, ListTodo, SendHorizonal, LoaderCircle, Square, X, CalendarX, RotateCw, ChevronUp, ChevronDown } from 'lucide-react';
 import { motion } from 'framer-motion'
 import { AlertContext } from '@/context/AlertContext';
 
@@ -27,6 +27,8 @@ const todoSchema = z.object({
 });
 
 function Hero() {
+    const [isLoading, setIsLoading] = useState(false);
+    const [missedLoading, setMissedLoading] = useState(false);
     const [todoItems, setTodoItems] = useState<TodoItem[]>([]);
     const [missedTodoItems, setMissedTodoItems] = useState<TodoItem[]>([]);
     const [showTime, setShowTime] = useState(false);
@@ -43,11 +45,11 @@ function Hero() {
     };
 
     const fetchTodoItems = async (date: Date) => {
+        setIsLoading(true);
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         const dateStr = `${year}-${month}-${day}`;
-
         try {
             const response = await axios.get(`/api/todo/tasks/${dateStr}`);
             const tasks: TodoItem[] = response.data.tasks.map((task: TodoItem) => ({
@@ -64,10 +66,13 @@ function Hero() {
             } else {
                 errorAlert('Something went wrong', 5);
             }
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const fetchMissedTodoItems = async () => {
+        setMissedLoading(true);
         try {
             const response = await axios.get('/api/todo/missed');
             const tasks: TodoItem[] = response.data.missedTasks.map((task: TodoItem) => ({
@@ -84,6 +89,8 @@ function Hero() {
             } else {
                 errorAlert('Something went wrong', 5)
             }
+        } finally {
+            setMissedLoading(false);
         }
     }
 
@@ -252,11 +259,19 @@ function Hero() {
             </div>
             <div className="flex-1 rounded-lg p-3 text-dark-gray overflow-y-hidden">
                 <ul className="h-full w-full flex flex-col gap-3 overflow-y-auto scrollbar-hide">
-                    {todoItems.length === 0 && <motion.div initial={{ opacity: 0, scale: 0.5 }} whileInView={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }} className='text-sm text-dark-gray/50 w-full h-full flex flex-col justify-center items-center'>
-                        <FolderX size={30} />
-                        <div>No task yet</div>
-                    </motion.div>}
-                    {todoItems.map((item, index) => (
+                    {isLoading ? (
+                        <div className="w-full h-full flex justify-center items-center">
+                            <div className='flex gap-2'>
+                                <div className='w-2 h-2 rounded-full bg-bright-blue animate-bounce [animation-delay:.7s]'></div>
+                                <div className='w-2 h-2 rounded-full bg-bright-blue animate-bounce [animation-delay:.2s]'></div>
+                                <div className='w-2 h-2 rounded-full bg-bright-blue animate-bounce [animation-delay:.7s]'></div>
+                            </div>
+                        </div>
+                    ) : todoItems.length === 0 ? (
+                        <motion.div initial={{ opacity: 0, scale: 0.5 }} whileInView={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }} className='text-sm text-dark-gray/50 w-full h-full flex flex-col justify-center items-center'>
+                            <div>No tasks found. Please add some.</div>
+                        </motion.div>
+                    ) : todoItems.map((item, index) => (
                         <motion.li initial={{ y: -20, opacity: 0.5 }} whileInView={{ y: 0, opacity: 1 }} transition={{ duration: 0.5 }}
                             ref={item.ref}
                             key={index}
@@ -310,11 +325,19 @@ function Hero() {
             </div>
             <div className='flex-1 p-3 text-dark-gray overflow-hidden'>
                 <ul className='h-full w-full flex flex-col gap-3 overflow-y-auto scrollbar-hide'>
-                    {missedTodoItems.length === 0 && <motion.div initial={{ opacity: 0, scale: 0.5 }} whileInView={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }} className='text-sm text-dark-gray/50 w-full h-full flex flex-col justify-center items-center'>
-                        <FolderX size={30} />
-                        <div>No Task Missed</div>
-                    </motion.div>}
-                    {missedTodoItems.map((item, index) => (
+                    {missedLoading ? (
+                        <div className='w-full h-full flex justify-center items-center'>
+                            <div className='flex gap-2'>
+                                <div className='w-2 h-2 rounded-full bg-bright-blue animate-bounce [animation-delay:.7s]'></div>
+                                <div className='w-2 h-2 rounded-full bg-bright-blue animate-bounce [animation-delay:.2s]'></div>
+                                <div className='w-2 h-2 rounded-full bg-bright-blue animate-bounce [animation-delay:.7s]'></div>
+                            </div>
+                        </div>
+                    ) : missedTodoItems.length === 0 ? (
+                        <motion.div initial={{ opacity: 0, scale: 0.5 }} whileInView={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }} className='text-sm text-dark-gray/50 w-full h-full flex flex-col justify-center items-center'>
+                           <div>No task missed</div>
+                        </motion.div>
+                    ) : missedTodoItems.map((item, index) => (
                         <motion.li initial={{ x: 20, opacity: 0.5 }} whileInView={{ x: 0, opacity: 1 }} transition={{ duration: 0.5 }} key={index} className='p-3 w-full shadow-sm rounded-lg relative flex group bg-soft-white'>
                             <div className='flex justify-between items-center w-full'>
                                 <div>

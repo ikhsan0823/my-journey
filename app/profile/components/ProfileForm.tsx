@@ -30,7 +30,10 @@ const schema = z.object({
             { message: 'Invalid date' }
         ),
     gender: z.string().min(1, { message: 'Gender is required' }),
-    phone: z.number().min(1, { message: 'Phone is required' }),
+    phone: z
+            .string()
+            .min(1, { message: 'Phone is required' })
+            .refine((phone) => /^\d+$/.test(phone), { message: 'Phone Number must be a number' }),
 });
 
 
@@ -97,7 +100,7 @@ export const ProfileForm = ({formClose, profileData, updateProfile}: {formClose:
                             {errors.gender && <p className='text-tomato'>{errors.gender.message}</p>}
                         </div>
                         <div className='flex flex-col w-full'>
-                            <label className='font-semibold mb-1' htmlFor="phone">Phone</label>
+                            <label className='font-semibold mb-1' htmlFor="phone">Phone Number</label>
                             <input type="text" {...register('phone')} id="phone" className='rounded-lg bg-transparent' />
                             {errors.phone && <p className='text-tomato'>{errors.phone.message}</p>}
                         </div>

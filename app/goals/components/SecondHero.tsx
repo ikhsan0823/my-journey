@@ -164,11 +164,11 @@ export const SecondHero = ({ formSubmitted }: { formSubmitted: boolean}) => {
                     <motion.li initial={{x: -50, opacity: 0}} whileInView={{x:0, opacity: 1}} transition={{duration: 0.5}} key={goal._id} onClick={() => handleDetails(goal)} className='flex items-center gap-3 mb-2 border border-dark-gray text-dark-gray p-2 rounded-lg w-full cursor-pointer'>
                         <div className='flex flex-col items-center justify-center font-semibold text-sm'>
                             <Trophy size={20} />
-                            <div>{new Date(goal.completionDate).toLocaleDateString()}</div>
+                            <div>{new Date(goal.completionDate).toLocaleDateString('en-Us', { year: 'numeric', month: 'short', day: 'numeric' })}</div>
                         </div>
                         <div className='font-semibold flex-1'>
                             <div className='text-sm flex justify-between'>
-                                <div className='text-sm mr-2'>Start at {new Date(goal.startTime).toLocaleDateString()}</div>
+                                <div className='text-sm mr-2'>Start at {new Date(goal.startTime).toLocaleDateString('en-Us', { year: 'numeric', month: 'short', day: 'numeric' })}</div>
                                 <div className='text-sm'>Progress at {goal.completionPercentage}%</div>
                             </div>
                             <div className='text-base mt-2'>{goal.goals}</div>
@@ -179,11 +179,11 @@ export const SecondHero = ({ formSubmitted }: { formSubmitted: boolean}) => {
                     <motion.li initial={{x: -50, opacity: 0}} whileInView={{x:0, opacity: 1}} transition={{duration: 0.5}} key={goal._id} onClick={() => handleDetails(goal)} className='flex items-center gap-3 mb-2 border border-dark-gray text-dark-gray p-2 rounded-lg w-full cursor-pointer'>
                         <div className='flex flex-col items-center justify-center font-semibold text-sm'>
                             <Trophy size={20} />
-                            <div>{new Date(goal.completionDate).toLocaleDateString()}</div>
+                            <div>{new Date(goal.completionDate).toLocaleDateString('en-Us', { year: 'numeric', month: 'short', day: 'numeric' })}</div>
                         </div>
                         <div className='font-semibold flex-1'>
                             <div className='text-sm flex justify-between'>
-                                <div className='text-sm mr-2'>Start at {new Date(goal.startTime).toLocaleDateString()}</div>
+                                <div className='text-sm mr-2'>Start at {new Date(goal.startTime).toLocaleDateString('en-Us', { year: 'numeric', month: 'short', day: 'numeric' })}</div>
                                 <div className='text-sm'>Progress at {goal.completionPercentage}%</div>
                             </div>
                             <div className='text-base mt-2'>{goal.goals}</div>

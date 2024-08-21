@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
+import React, { useState, useEffect, forwardRef } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 
@@ -15,7 +15,7 @@ interface CalendarProps {
 }
 
 // eslint-disable-next-line react/display-name
-const Calendar = forwardRef(({ onButtonClick }: CalendarProps, ref) => {
+const Calendar = forwardRef(({ onButtonClick }: CalendarProps) => {
   // Mendapatkan tanggal hari ini
   const currentDate = new Date();
   const [displayMonth, setDisplayMonth] = useState(currentDate.getMonth());
@@ -31,11 +31,17 @@ const Calendar = forwardRef(({ onButtonClick }: CalendarProps, ref) => {
     }
   }
 
-  useImperativeHandle(ref, () => ({
-    updateCalendar: () => {
-      fetchPlan();
-    }
-  }));
+  useEffect(() => {
+        const handleFetchPlan = () => {
+            fetchPlan();
+        };
+
+        window.addEventListener('fetchPlan', handleFetchPlan);
+
+        return () => {
+            window.removeEventListener('fetchPlan', handleFetchPlan);
+        };
+    }, []);
 
   useEffect(() => {
     fetchPlan();
@@ -44,19 +50,14 @@ const Calendar = forwardRef(({ onButtonClick }: CalendarProps, ref) => {
   // Mendapatkan jumlah hari dalam bulan ini
   const daysInMonth = new Date(displayYear, displayMonth + 1, 0).getDate();
 
-  // Mendapatkan hari pertama dalam bulan ini
   const firstDayOfMonth = new Date(displayYear, displayMonth, 1).getDay();
 
-  // Membuat array kosong untuk tabel kalender
   const calendar = [];
   let rows = [];
 
-  // Menambahkan hari-hari pertama sebelum tanggal pertama bulan
   for (let i = 0; i < firstDayOfMonth; i++) {
     rows.push(<td key={-i} className="border border-dark-gray/30 h-20 bg-rainy-day/50"></td>);
   }
-
-  // Menambahkan hari dalam bulan ke dalam array kalender
   for (let day = 1; day <= daysInMonth; day++) {
     const isToday = day === currentDate.getDate() && displayMonth === currentDate.getMonth() && displayYear === currentDate.getFullYear();
     const year = displayYear;
@@ -96,7 +97,6 @@ const Calendar = forwardRef(({ onButtonClick }: CalendarProps, ref) => {
     }
   }
 
-  // Menambahkan baris terakhir jika tidak penuh
   if (rows.length > 0) {
     calendar.push(<tr key="last">{rows}</tr>);
   }

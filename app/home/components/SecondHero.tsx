@@ -14,16 +14,18 @@ const truncateText = (text: string, maxLength: number) => {
   return text.substring(0, maxLength) + '...';
 };
 
+type Notes = {
+  title: string;
+  content: string;
+  category: string;
+  date: string;
+  _id: string;
+}
+
 export const SecondHero = () => {
   const [images, setImages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [notes, setNotes] = useState({
-    title: '',
-    content: '',
-    category: '',
-    date: '',
-    _id: ''
-  });
+  const [notes, setNotes] = useState<Notes | null>(null);
   const [content, setContent] = useState<string>('');
 
   const fetchSlides = async () => {
@@ -39,6 +41,7 @@ export const SecondHero = () => {
   };
 
   const fetchNotes = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get('/api/dashboard');
       setNotes(response.data.recentNote);
@@ -48,6 +51,8 @@ export const SecondHero = () => {
       };
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -92,20 +97,30 @@ export const SecondHero = () => {
           <Notebook size={24} />
           <div>Recent Note</div>
         </motion.div>
-        {notes ? <motion.div initial={{ y: -50, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} transition={{ delay: 1, duration: 0.5 }} className='shadow-sm bg-bright-blue mx-5 my-3 rounded-lg p-3 max-h-40 min-h-40 overflow-hidden text-dark-gray flex flex-col justify-between'>
-          <div>
-            <div className='font-semibold mb-2 overflow-hidden text-ellipsis whitespace-nowrap'>{notes?.title}</div>
-            <div className='text-sm mb-5 overflow-hidden h-14 w-full'>{content}</div>
+        {isLoading ? (
+          <div className='h-40 flex justify-center items-center'>
+            <div className='flex gap-2'>
+              <div className='w-2 h-2 rounded-full bg-bright-blue animate-bounce [animation-delay:.7s]'></div>
+              <div className='w-2 h-2 rounded-full bg-bright-blue animate-bounce [animation-delay:.2s]'></div>
+              <div className='w-2 h-2 rounded-full bg-bright-blue animate-bounce [animation-delay:.7s]'></div>
+            </div>
           </div>
-          <div className='text-sm flex items-center justify-between'>
-            <div>{new Date(notes?.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
-            <div className='p-2 bg-dark-gray hover:bg-dark-grayish-blue text-soft-white rounded-full cursor-pointer'><Pencil size={15} /></div>
+        ) : notes ? (
+          <motion.div initial={{ y: -50, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} transition={{ delay: 1, duration: 0.5 }} className='shadow-sm bg-bright-blue mx-5 my-3 rounded-lg p-3 max-h-40 min-h-40 overflow-hidden text-dark-gray flex flex-col justify-between'>
+            <div>
+              <div className='font-semibold mb-2 overflow-hidden text-ellipsis whitespace-nowrap'>{notes?.title}</div>
+              <div className='text-sm mb-5 overflow-hidden h-14 w-full'>{content}</div>
+            </div>
+            <div className='text-sm flex items-center justify-between'>
+              <div>{new Date(notes?.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+              <div className='p-2 bg-dark-gray hover:bg-dark-grayish-blue text-soft-white rounded-full cursor-pointer'><Pencil size={15} /></div>
+            </div>
+          </motion.div>
+        ) : (
+          <div className='max-h-40 min-h-40 flex justify-center items-center text-dark-gray/50'>
+            <div>No notes available. Please create a note!</div>
           </div>
-        </motion.div>: 
-        <div className='max-h-40 min-h-40 flex justify-center items-center text-dark-gray/50'>
-          <div>No notes available. Please create a note!</div>
-        </div>
-        }
+        )}
       </div>
     </div>
   )
