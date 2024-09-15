@@ -35,7 +35,7 @@ export const CardContainer = ({ notes }: { notes: Note[] }) => {
               <div className='flex-1 flex flex-col overflow-hidden'>
                 <div className='text-sm mt-3'>{new Date(noteDetails.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
                 <div className='font-semibold text-lg'>{noteDetails.title}</div>
-                <div className='mt-6 flex-1 overflow-y-auto scrollbar-hide bg-light-gray p-3 rounded-lg text-sm'>{noteDetails.content}</div>
+                <div className='mt-6 flex-1 overflow-y-auto scrollbar-hide bg-light-gray p-3 rounded-lg text-sm whitespace-pre-wrap'>{noteDetails.content}</div>
               </div>
             </div>
           </div>
